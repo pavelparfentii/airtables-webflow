@@ -49,6 +49,10 @@ return [
             'name' => 'Universities',
             'base' => env('AIRTABLE_BASE'),
         ],
+        'Courses' => [
+            'name' => 'Courses',
+            'base' => env('AIRTABLE_BASE'),
+        ],
 
     ],
 

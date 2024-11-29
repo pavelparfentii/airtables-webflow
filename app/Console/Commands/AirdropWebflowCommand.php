@@ -7,6 +7,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use League\CommonMark\CommonMarkConverter;
+use Tapp\Airtable\Facades\AirtableFacade as Airtable;
 
 class AirdropWebflowCommand extends Command
 {
@@ -48,7 +49,14 @@ class AirdropWebflowCommand extends Command
 
         $response = Http::withToken(config('services.airtable.api_key'))->get($airtableUrl);
 
-        $records = $response->json()['records'];
+        //dd($response->json()['records']);
+
+        $a = Airtable::table('Courses')->all();
+//        dd($a);
+
+//        $records = $response->json()['records'];
+
+        $records = Airtable::table('Universities')->all();
 
         $webflowSlugs = [];
         foreach ($webflowResponseListItems as $key => $item) {
