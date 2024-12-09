@@ -5,7 +5,9 @@ namespace App\Console\Commands;
 use App\Service\AirtableWebflowSyncService;
 use App\Service\Mapper\CategoryMapper;
 use Illuminate\Console\Command;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use League\CommonMark\CommonMarkConverter;
 use Tapp\Airtable\Facades\AirtableFacade as Airtable;
 
@@ -49,12 +51,23 @@ class AirdropWebflowSyncServiceCommand extends Command
         );
         $universitySyncService->sync();
 
-        $coursesSyncService = new AirtableWebflowSyncService(
-            'Courses',
-            'https://api.webflow.com/v2/collections/66ebddafef241d4ff8b308d1/items',
+//        $coursesSyncService = new AirtableWebflowSyncService(
+//            'Courses',
+//            'https://api.webflow.com/v2/collections/66ebddafef241d4ff8b308d1/items',
+//
+//        );
+//        $coursesSyncService->sync();
 
-        );
-        $coursesSyncService->sync();
+        $siteId = '664c7389e48704408a488d5c';
+        $url = 'https://api.webflow.com/v2/sites/'. $siteId .'/publish';
+
+        $response = Http::withToken(config('services.webflow.api_key'))->post($url, ['customDomains'=>[]]);
+
+        if($response->successful()){
+            Log::info('site published successfull');
+        }else{
+            Log::info('site not published ' .$response->body() );
+        }
 
         return Command::SUCCESS;
     }

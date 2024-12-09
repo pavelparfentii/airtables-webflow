@@ -42,7 +42,7 @@ class AirtableWebflowSyncService
 
 
         $records = Airtable::table($this->airtableTable)->all();
-       // dd($records);
+
         $webflowItems = $this->getWebflowItems($this->webflowCollectionUrl);
         //dd($webflowItems);
         $webflowSlugs = $this->getWebflowSlugs($webflowItems);
@@ -51,7 +51,7 @@ class AirtableWebflowSyncService
 
         $airtableSlugs = collect($records)->mapWithKeys(function ($record) {
             $fields = $record['fields'] ?? [];
-            return [$this->slugify($fields['Slug'] ?? '') => true]; // Генеруємо slug із Name
+            return [$this->slugify($fields['Slug'] ?? '') => true]; // Генеруємо slug із Slug
         });
 
         //dd($airtableSlugs);
@@ -94,7 +94,6 @@ class AirtableWebflowSyncService
 
         $itemsToDelete = $slugsToDelete->toArray();
 
-        //dd($itemsToUpdate);
         //dd($itemsToUpdate);
 //        dd($itemsToCreate);
 
@@ -184,7 +183,7 @@ class AirtableWebflowSyncService
         //dd($fieldData);
 
         foreach ($config['transformations'] as $field => $transformation) {
-            if (in_array($field, ['category', 'training-center-relation'])) {
+            if (in_array($field, ['category', 'training-center-relation']) || in_array($field, ['location-2'] )) {
                 $webflowApi = new WebflowApi();
                 $categoryMapper = new CategoryMapper($webflowApi);
 

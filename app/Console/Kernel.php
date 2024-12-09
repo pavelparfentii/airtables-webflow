@@ -15,8 +15,6 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
-        //$schedule->command('airdrop:test')->everyMinute();
 
         $schedule->command('airdrop-webflow-sync:command')->hourly();
     }

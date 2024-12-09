@@ -35,7 +35,7 @@ return [
         'mac_secret' => env('AIRTABLE_MAC_SECRET'),
     ],
     'webflow' => [
-        'api_key' => 'd8974ff4d865161f508d6c68741e35fcbbc9234307c320a4ef4b0617a0f7dd1b'
+        'api_key' => 'b72e5038ecd1c7be272da720af42dc2e6d77e5efc179cc5c0f37b90ae9755f70'
     ]
 
 ];

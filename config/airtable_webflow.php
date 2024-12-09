@@ -15,9 +15,12 @@ return [
             'Hero Banner' =>        'hero-banner',
             'Global Ranking URL' => 'global-ranking',
             'City'=>                'location-city',
+            'Country'             =>'location-2',
             'Education/Programms'=> 'university-programs',
             'Local Ranking'=>       'locar-ranking',
-            'About University'=>    'overview'
+            'About University'=>    'overview',
+            'Brochure'=>'brochure',
+            'Brochure visibility'=> 'brochure-visibility',
         ],
         'transformations' => [
             'slug' => fn($fields) => Str::slug($fields['Name'] ?? ''),
@@ -32,6 +35,9 @@ return [
             'overview'=>fn($fields, $converter) => isset($fields['About University'])
                 ? $converter->convert($fields['About University'])->getContent()
                 : null,
+            'brochure'=>fn($fields) => $fields['Brochure'][0]['url'] ?? null,
+            'brochure-visibility'=>fn($fields)=>isset($fields['Brochure visibility']) ?  filter_var($fields['Brochure visibility'], FILTER_VALIDATE_BOOLEAN) ?? false : false,
+            'location-2'=>fn($fields, $categoryMapper) => $categoryMapper->mapCategory($fields['Country'] ?? null, 'countries'),
         ],
     ],
     'Courses' => [
