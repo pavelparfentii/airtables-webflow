@@ -66,7 +66,7 @@ class AdminController extends Controller
         $admin->save();
 
 
-        $request->session()->flash('success', 'Admin created successfully');
+        $request->session()->flash('message', 'Admin created successfully');
         return redirect()->route('admins.index', compact('admin'));
     }
 
@@ -117,7 +117,7 @@ class AdminController extends Controller
         }
         $admin->save();
 
-        return redirect()->route('admins.index')->with('success', 'Admin updated successfully');
+        return redirect()->route('admins.index')->with('message', 'Admin updated successfully');
     }
 
     /**

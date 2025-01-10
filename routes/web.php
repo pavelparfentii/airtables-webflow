@@ -18,7 +18,7 @@ Route::redirect('/', '/home');
 
 Route::get( 'home', [App\Http\Controllers\HomeController::class, 'home'])->name('home');
 
-Route::resource('admins', App\Http\Controllers\AdminController::class);
+Route::resource('admins', App\Http\Controllers\AdminController::class)->middleware('auth');
 
 
 
