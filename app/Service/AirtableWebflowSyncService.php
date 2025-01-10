@@ -31,30 +31,18 @@ class AirtableWebflowSyncService
 
     public function sync()
     {
-//        $webflowApi = new WebflowApi();
-//        $categoryMapper = new CategoryMapper($webflowApi);
-//
-//        $subcategory = 'Law'; // Назва категорії, яку потрібно знайти
-//        $webflowCategoryId = $categoryMapper->mapCategory($subcategory);
-//        dd($webflowCategoryId);
-
-
-
 
         $records = Airtable::table($this->airtableTable)->all();
 
         $webflowItems = $this->getWebflowItems($this->webflowCollectionUrl);
-        //dd($webflowItems);
-        $webflowSlugs = $this->getWebflowSlugs($webflowItems);
 
-//        dd($webflowSlugs);
+        $webflowSlugs = $this->getWebflowSlugs($webflowItems);
 
         $airtableSlugs = collect($records)->mapWithKeys(function ($record) {
             $fields = $record['fields'] ?? [];
             return [$this->slugify($fields['Slug'] ?? '') => true]; // Генеруємо slug із Slug
         });
 
-        //dd($airtableSlugs);
 
         $slugsToDelete = collect($webflowSlugs)->filter(function ($webflowId, $slug) use ($airtableSlugs) {
             return !isset($airtableSlugs[$slug]); // Якщо slug відсутній у Airtable, додаємо його до видалення
@@ -94,8 +82,6 @@ class AirtableWebflowSyncService
 
         $itemsToDelete = $slugsToDelete->toArray();
 
-        //dd($itemsToUpdate);
-//        dd($itemsToCreate);
 
         $this->updateWebflowItems($itemsToUpdate);
 
@@ -106,9 +92,6 @@ class AirtableWebflowSyncService
 
     protected function getWebflowItems($url)
     {
-//        return Http::withToken(config('services.webflow.api_key'))
-//                ->get($this->webflowCollectionUrl . "/items")
-//                ->json()['items'] ?? [];
 
         $offset = 0;
         $limit = 100;
@@ -148,7 +131,6 @@ class AirtableWebflowSyncService
 
     protected function getWebflowSlugs($webflowItems): array
     {
-//        dd($webflowItems);
 
         $webflowSlugs = [];
         foreach ($webflowItems as $key => $item) {
@@ -157,11 +139,6 @@ class AirtableWebflowSyncService
 
         return $webflowSlugs;
 
-//        $slugs = [];
-//        foreach ($webflowItems as $item) {
-//            $slugs[$item['slug']] = $item['_id'];
-//        }
-//        return $slugs;
     }
 
     protected function prepareFieldData(string $tableKey, array $fields): array
@@ -204,8 +181,6 @@ class AirtableWebflowSyncService
     {
         return [
             'id' => $webflowId,
-//            'isArchived' => false,
-//            'isDraft' => false,
             'fieldData' => $fieldData,
         ];
     }

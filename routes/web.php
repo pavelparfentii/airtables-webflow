@@ -13,6 +13,21 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::redirect('/', '/home');
+
+
+Route::get( 'home', [App\Http\Controllers\HomeController::class, 'home'])->name('home');
+
+Route::resource('admins', App\Http\Controllers\AdminController::class);
+
+
+
+//Route::group(['prefix' => 'laravel-filemanager', 'middleware' => ['web']], function () {
+//    \UniSharp\LaravelFilemanager\Lfm::routes();
+//});
+
+Route::get('login', [\App\Http\Controllers\AuthController::class, 'create'])->name('login');
+Route::post('login', [\App\Http\Controllers\AuthController::class, 'store'])->name('login.store');
+Route::delete('logout', [\App\Http\Controllers\AuthController::class, 'destroy'])->name('logout');
+
+

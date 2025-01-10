@@ -44,10 +44,9 @@ class CategoryMapper
     protected function loadCategories(string $slug): array
     {
         $collections = $this->webflowApi->getCollections();
-       // dd($collections);
-        // Перевірка, чи є колекції у відповіді
+
         if (!isset($collections['collections']) || empty($collections['collections'])) {
-           // throw new Exception('No collections found in Webflow API response.');
+
         }
 
         $categoryCollection = collect($collections['collections'])
@@ -56,13 +55,11 @@ class CategoryMapper
         //var_dump($categoryCollection);
         if (!$categoryCollection) {
 
-            //throw new Exception('Category collection not found in Webflow.');
         }
 
-        // Отримання всіх елементів категорій
+
         $items = $this->webflowApi->getItems($categoryCollection['id']);
-        //dd($items);
-        // Перевірка, чи є елементи у відповіді
+
         if (!isset($items['items']) || empty($items['items'])) {
            // throw new Exception('No items found in the category collection.');
         }

@@ -5,13 +5,14 @@
     "keywords": ["framework", "laravel"],
     "license": "MIT",
     "require": {
-        "php": "^7.4",
+        "php": "^8.3",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel/framework": "^8.75",
         "laravel/tinker": "^2.5",
         "league/commonmark": "^2.5",
-        "tapp/laravel-airtable": "^2.3"
+        "tapp/laravel-airtable": "^2.3",
+        "unisharp/laravel-filemanager": "^2.6"
     },
     "require-dev": {
         "facade/ignition": "^2.5",

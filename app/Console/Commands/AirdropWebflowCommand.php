@@ -49,12 +49,7 @@ class AirdropWebflowCommand extends Command
 
         $response = Http::withToken(config('services.airtable.api_key'))->get($airtableUrl);
 
-        //dd($response->json()['records']);
-
         $a = Airtable::table('Courses')->all();
-//        dd($a);
-
-//        $records = $response->json()['records'];
 
         $records = Airtable::table('Universities')->all();
 
@@ -65,22 +60,22 @@ class AirdropWebflowCommand extends Command
 
         $itemsToUpdate = [];
 
-// Проходимо по кожному запису з $records
+
         if (isset($records)) {
             foreach ($records as $record) {
                 $fields = $record['fields'];
 
                 if (isset($fields) && !empty($fields)) {
-                    // Отримуємо значення last_modified і обробляємо його, якщо присутній
+
                     if (isset($fields['last_modified']) && !empty($fields['last_modified'])) {
                         $lastModified = $fields['last_modified'];
                         $lastModifiedDate = Carbon::parse($lastModified);
                     }
 
-                    // Створюємо slug з Name
+
                     $slug = $this->slugify($fields['Name']);
 
-                    // Перетворення Markdown та збирання даних для оновлення
+
                     $description = $fields['Description'] ?? null;
                     $logotypeUrl = $fields['Logotype'][0]['url'] ?? null;
                     $living = $fields['Living and Accommodation'] ?? null;
@@ -97,11 +92,8 @@ class AirdropWebflowCommand extends Command
                     $formatEducationPrograms = isset($educationPrograms) ? $converter->convert($educationPrograms)->getContent() : null;
                     $formatOverview = isset($aboutUniversity) ? $converter->convert($aboutUniversity)->getContent() : null;
 
-                    // Перевіряємо, чи існує цей slug в $webflowSlugs
                     if (isset($webflowSlugs[$slug])) {
 
-                        // Збіг знайдено, виконуємо оновлення
-//                        dd('here');
 
                         $fieldData = array_filter([
                             "name" => $fields['Name'],
@@ -121,7 +113,7 @@ class AirdropWebflowCommand extends Command
                         });
 
 
-                        // Додаємо запис для оновлення лише якщо дата збігається
+
                         if ($lastModifiedDate->isSameDay(now())) {
 
                             $itemsToUpdate[] = [
@@ -133,7 +125,7 @@ class AirdropWebflowCommand extends Command
 
                         }
                     } else {
-                        // Якщо slug не знайдено в $webflowSlugs, формуємо новий запис для $fieldDataPostToWebflow
+
                         $fieldDataPostToWebflow[$slug] = array_filter([
                             "name" => $fields['Name'],
                             "slug" => $slug,
@@ -157,7 +149,7 @@ class AirdropWebflowCommand extends Command
 
 
         $fieldDataPostToWebflow = isset($fieldDataPostToWebflow) ? array_values($fieldDataPostToWebflow) : null;
-//        dd(empty($fieldDataPostToWebflow));
+
 
         $data = [
             "items" => $itemsToUpdate
@@ -165,7 +157,7 @@ class AirdropWebflowCommand extends Command
 
 
         $newData = [
-            "cmsLocaleIds" => [], // додайте необхідні локалізації
+            "cmsLocaleIds" => [],
             "isArchived" => false,
             "isDraft" => false,
             "fieldData" => $fieldDataPostToWebflow
@@ -181,7 +173,7 @@ class AirdropWebflowCommand extends Command
                 var_dump($webflowResponse->json());
                 $this->publishItems($webflowResponse->json());
 
-//                return response()->json(['message' => 'Items updated in Webflow successfully']);
+
             } else {
                 var_dump($webflowResponse->json());
                 Log::info('Failed to update items in Webflow'. $webflowResponse->body());
@@ -199,36 +191,16 @@ class AirdropWebflowCommand extends Command
                 var_dump($webflowResponse->json());
                 $this->publishItems($webflowResponse->json());
                 Log::info('Items updated in Webflow successfully');
-//                return response()->json(['message' => 'Items updated in Webflow successfully']);
+
             } else {
                 var_dump($webflowResponse->json());
                 Log::info('Items updated in Webflow successfully' . $webflowResponse->body());
-//                return response()->json(['error' => 'Failed to update items in Webflow', 'details' => $webflowResponse->body()], 500);
+
             }
         }
 
         return Command::SUCCESS;
 
-//        dd('here');
-////        return 0;
-////        $airtable = new Airtable(['api_key' => 'your_api_key',
-////            'base' => 'your_base_id']);
-////        $records= $airtable::table('Universities')->all();
-//       $records = Airtable::table('Universities')->all();
-//       foreach ($records as $record) {
-//           if (isset($record['fields']) && !empty($record['fields'])) {
-//               if (isset($record['fields']['last_modified']) && !empty($record['fields']['last_modified'])) {
-//                   $lastModified = $record['fields']['last_modified'];
-//                   $lastModifiedDate = Carbon::parse($lastModified);
-//
-//                   if ($lastModifiedDate->isSameDay(now())){
-//                       dd('here');
-//                   }
-//               }
-//
-//           }
-//       }
-//        dd($records);
     }
 
     private function slugify($text, string $divider = '-')
@@ -286,7 +258,6 @@ class AirdropWebflowCommand extends Command
                     }
                 }
 
-                // Оновлюємо offset для наступного запиту
                 $offset += 1;
 
                 $total = $data['pagination']['total'];
